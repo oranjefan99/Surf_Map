@@ -7,7 +7,7 @@ from retry_requests import retry
 import numpy as np
 
 st.set_page_config(layout="wide")
-st.title("Surf Suitability Map (Beginner Focus)")
+st.title("Surf’s up… or down? A surf forecast map for novice surfers")
 
 # ------------------------
 # API SETUP
@@ -141,7 +141,7 @@ for name, lat, lon, optimal_dir, webcam in locations:
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=8,
+    zoom_start=10,
     min_zoom=6,
     max_zoom=16,
 )
