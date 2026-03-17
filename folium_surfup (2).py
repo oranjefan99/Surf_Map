@@ -152,6 +152,9 @@ m = folium.Map(
     min_lon=map_bounds[0][1],
     max_lon=map_bounds[1][1]
 )
+
+folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
+
 # Add Google Satellite Layer
 folium.TileLayer(
     tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
@@ -226,45 +229,57 @@ for loc in locations_data:
 
 # ------------------------
 # DISPLAY
-# ------------------------
-st_folium(m, width=900, height=600)
 # Sleek Horizontal Legend
+st_folium(m, width=900, height=500)
+
 st.markdown("""
 <style>
-    .legend-container {
-        background-color: #f9f9f9;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-top: 10px;
+    .mini-legend {
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        max-width: 350px; /* This makes it smaller */
+        margin-top: 5px;
+        font-family: sans-serif;
     }
-    .legend-bar {
-        display: flex;
-        height: 20px;
-        border-radius: 10px;
-        overflow: hidden;
+    .legend-title {
+        font-size: 14px;
+        font-weight: bold;
         margin-bottom: 8px;
+        color: #333;
+        text-align: center;
     }
-    .legend-item { flex: 1; text-align: center; font-size: 11px; font-weight: bold; color: white; line-height: 20px; }
-    .legend-labels { display: flex; justify-content: space-between; font-size: 12px; color: #444; }
+    .bar-container {
+        display: flex;
+        height: 12px;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    .bar-segment { flex: 1; }
+    .label-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+        font-size: 10px;
+        color: #666;
+    }
 </style>
 
-<div class="legend-container">
-    <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">Surf Condition Guide</div>
-    <div class="legend-bar">
-        <div style="background-color: black;" class="legend-item">0</div>
-        <div style="background-color: #8B0000;" class="legend-item">0.2</div>
-        <div style="background-color: red;" class="legend-item">0.4</div>
-        <div style="background-color: orange;" class="legend-item">0.6</div>
-        <div style="background-color: #90EE90;" class="legend-item">0.8</div>
-        <div style="background-color: green;" class="legend-item">1.0</div>
+<div class="mini-legend">
+    <div class="legend-title">🌊 Surf Score Legend</div>
+    <div class="bar-container">
+        <div class="bar-segment" style="background-color: black;"></div>
+        <div class="bar-segment" style="background-color: #8B0000;"></div>
+        <div class="bar-segment" style="background-color: red;"></div>
+        <div class="bar-segment" style="background-color: orange;"></div>
+        <div class="bar-segment" style="background-color: #90EE90;"></div>
+        <div class="bar-segment" style="background-color: green;"></div>
     </div>
-    <div class="legend-labels">
+    <div class="label-container">
         <span>Unsurfable</span>
-        <span>Very Poor</span>
         <span>Poor</span>
         <span>Fair</span>
-        <span>Good</span>
         <span>Excellent</span>
     </div>
 </div>
