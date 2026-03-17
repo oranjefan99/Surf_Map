@@ -133,7 +133,7 @@ beach_names = [loc["name"] for loc in locations_data]
 selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
 
 if selected_beach_name == "Overview":
-    map_center = [43.493198, -3.887073]
+    map_center = [43.493198, -3.987073]
     start_zoom = 10
 else:
     selected_loc = next(item for item in locations_data if item["name"] == selected_beach_name)
