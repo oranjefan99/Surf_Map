@@ -57,23 +57,23 @@ def get_all_surf_data():
             wind_speed = h2.Variables(0).ValuesAsNumpy()[current_hour_idx]
             wind_direction = h2.Variables(1).ValuesAsNumpy()[current_hour_idx]
 
-            local_H = local_wave_height(wave_h, wave_d, optimal_dir)
-            score = surf_score(local_H, wind_s, wave_height_factor(local_H), 
-                               local_wind_speed_factor(wind_s), 
-                               local_wind_dir_factor(wind_d, optimal_dir))
+            local_H = local_wave_height(wave_height, wave_direction, optimal_dir)
+            score = surf_score(local_H, wind_speed, wave_height_factor(local_H), 
+                               local_wind_speed_factor(wind_speed), 
+                               local_wind_dir_factor(wind_direction, optimal_dir))
 
             processed_data.append({
                 "name": name, "lat": lat, "lon": lon, "score": score,
-                "wave": local_H, "wind": wind_s, "sst": temp_s,
-                "wetsuit": wetsuit(temp_s), "webcam": webcam
+                "wave": local_H, "wind": wind_speed, "sst": sst,
+                "wetsuit": wetsuit(sst), "webcam": webcam
             })
         except Exception as e:
             continue
             
     return processed_data
 # Wave + wind formulas
-def local_wave_height(wave_height, wave_direction, optimal_wave_direction):
-    diff = abs(wave_direction - optimal_wave_direction) % 360
+def local_wave_height(wave_height, wave_direction, optimal_dir):
+    diff = abs(wave_direction - optimal_dir) % 360
     delta = min(diff, 360 - diff)
     base = (1 + np.cos(np.radians(delta))) / 2
     factor = 1.4 * (base ** 1.75)
@@ -82,8 +82,8 @@ def local_wave_height(wave_height, wave_direction, optimal_wave_direction):
 def local_wind_speed_factor(wind_speed):
     return 1 if wind_speed <= 10 else (10 / wind_speed)
 
-def local_wind_dir_factor(wind_direction, optimal_wave_direction):
-    diff = abs(wind_direction - optimal_wave_direction) % 360
+def local_wind_dir_factor(wind_direction, optimal_dir):
+    diff = abs(wind_direction - optimal_dir) % 360
     delta = min(diff, 360 - diff)
     base = (1 - np.cos(np.radians(delta))) / 2
     return 0.1 + (0.9 * base)
@@ -96,17 +96,17 @@ def wave_height_factor(local_H):
     else:
         return min(1, max(0, 1 - (local_H - 0.9) / 0.9))
 
-def surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor):
+def surf_score(local_H, wind_speed, wave_height_factor, local_wind_speed_factor, local_wind_dir_factor):
     if (wind_speed < 49) and (0.6 < local_H < 2.5):
-        return (0.5 * wave_factor + 0.15 * ws_factor + 0.35 * wd_factor)
+        return (0.5 * wave_height_factor + 0.15 * local_wind_speed_factorr + 0.35 * local_wind_dir_factor)
     return 0
 # Wetsuit recommendation based on water temperature
-def wetsuit(temp):
-    if temp <= 7.5: return "6/5 mm"
-    elif temp <= 11.5: return "5/4 mm"
-    elif temp <= 15.5: return "4/3 mm"
-    elif temp <= 17.5: return "3/2 mm"
-    elif temp <= 20.5: return "2/1 mm"
+def wetsuit(sst):
+    if sst <= 7.5: return "6/5 mm"
+    elif sst <= 11.5: return "5/4 mm"
+    elif sst <= 15.5: return "4/3 mm"
+    elif sst <= 17.5: return "3/2 mm"
+    elif sst <= 20.5: return "2/1 mm"
     else: return "Shorty"
 
 # Colour scale
@@ -126,7 +126,6 @@ def score_color(score):
 
 # Fetch data
 locations_data = get_all_surf_data()
-
     
 # Create map + beach navigator
 
