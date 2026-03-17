@@ -159,13 +159,6 @@ folium.TileLayer(
     subdomains=['mt0', 'mt1', 'mt2', 'mt3']
 ).add_to(m)
 
-# 🗺 Optional: Terrain layer (nice extra)
-folium.TileLayer(
-    'Stamen Terrain',
-    name='Terrain',
-    control=True
-).add_to(m)
-
 # ------------------------
 # MARKERS
 # ------------------------
