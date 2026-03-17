@@ -139,12 +139,25 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # CREATE MAP (IMPROVED)
 # ------------------------
 m = folium.Map(
-    max_bounds=True,
     location=[43.493198, -3.587073],
     zoom_start=11,
     min_zoom=8,
     max_zoom=16,
+    max_bounds=True
 )
+
+# 🔒 Hard restrict map to Spain (prevents zooming out)
+m.fit_bounds([
+    [35.5, -10.0],   # Southwest Spain
+    [44.5, 4.5]      # Northeast Spain
+])
+
+folium.TileLayer(
+    'OpenStreetMap',
+    name='Standard Map',
+    overlay=False,
+    control=True
+).add_to(m)
 # Google Satellite Layer
 folium.TileLayer(
     tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
@@ -154,6 +167,7 @@ folium.TileLayer(
     subdomains=['mt0', 'mt1', 'mt2', 'mt3']
 ).add_to(m)
 
+folium.LayerControl(collapsed=False).add_to(m)
 # 🎨 Color mapping based on score
 def score_label(score):
     if score == 0:
@@ -222,12 +236,25 @@ for loc in locations_data:
 # ------------------------
 st_folium(m, width=900, height=600)
 
-st.markdown("""
-**Legend surf scores:**
-- Black = 0 (unsurfable)
-- Dark red = 0–0.2 (very poor)
-- Red = 0.2–0.4 (poor)
-- Orange = 0.4–0.6 (fair)
-- Light green = 0.6–0.8 (good)
-- Dark green = 0.8–1 (excellent)
-""")
+legend_html = """
+<div style="
+background-color:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+width:300px;
+font-family: Helvetica;
+margin-top:10px;
+">
+<h4 style="margin-top:0;">Surf Score Legend</h4>
+
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:black;margin-right:10px;"></div>0 (unsurfable)</div>
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:darkred;margin-right:10px;"></div>0–0.2 (very poor)</div>
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:red;margin-right:10px;"></div>0.2–0.4 (poor)</div>
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:orange;margin-right:10px;"></div>0.4–0.6 (fair)</div>
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:lightgreen;margin-right:10px;"></div>0.6–0.8 (good)</div>
+<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:green;margin-right:10px;"></div>0.8–1 (excellent)</div>
+</div>
+"""
+
+st.markdown(legend_html, unsafe_allow_html=True)
