@@ -93,8 +93,7 @@ for name, lat, lon, optimal_dir, webcam in locations:
         "longitude": lon,
         "hourly": ["wind_speed_10m", "wind_direction_10m"],
         "timezone": "Europe/Berlin",
-        "forecast_days": 1,
-    }
+        "forecast_days": 1,}
 
     response = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params)[0]
     response2 = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params2)[0]
