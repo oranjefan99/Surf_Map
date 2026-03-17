@@ -141,8 +141,8 @@ for name, lat, lon, optimal_dir, webcam in locations:
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=10,
-    min_zoom=6,
+    zoom_start=12,
+    min_zoom=8,
     max_zoom=16,
 )
 # Google Satellite Layer
