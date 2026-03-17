@@ -98,7 +98,7 @@ def wave_height_factor(local_H):
 
 def surf_score(local_H, wind_speed, wave_height_factor, local_wind_speed_factor, local_wind_dir_factor):
     if (wind_speed < 49) and (0.6 < local_H < 2.5):
-        return (0.5 * wave_height_factor + 0.15 * local_wind_speed_factorr + 0.35 * local_wind_dir_factor)
+        return (0.5 * wave_height_factor + 0.15 * local_wind_speed_factor + 0.35 * local_wind_dir_factor)
     return 0
 # Wetsuit recommendation based on water temperature
 def wetsuit(sst):
