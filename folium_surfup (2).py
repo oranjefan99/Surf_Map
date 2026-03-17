@@ -56,7 +56,7 @@ def wave_height_factor(local_H):
         return min(1, max(0, 1 - (local_H - 0.9) / 0.9))
 
 def surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor):
-    if (wind_speed < 30) and (0.6 < local_H < 2.5):
+    if (wind_speed < 49) and (0.6 < local_H < 2.5):
         return (0.5 * wave_factor + 0.15 * ws_factor + 0.35 * wd_factor)
     return 0
 
@@ -141,7 +141,7 @@ for name, lat, lon, optimal_dir, webcam in locations:
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=12,
+    zoom_start=11,
     min_zoom=8,
     max_zoom=16,
 )
