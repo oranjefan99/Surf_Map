@@ -52,7 +52,7 @@ def surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor):
     if (wind_speed < 49) and (0.6 < local_H < 2.5):
         return (0.5 * wave_factor + 0.15 * ws_factor + 0.35 * wd_factor)
     return 0
-
+# Wetsuit recommendation based on water temperature
 def wetsuit(temp):
     if temp <= 7.5: return "6/5 mm"
     elif temp <= 11.5: return "5/4 mm"
@@ -154,11 +154,11 @@ m = folium.Map(
     min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-1.5
 )
 
-# 1. Add a toggle in the sidebar
+# Add a toggle button in sidebar
 st.sidebar.subheader("Map Settings")
 map_style = st.sidebar.radio("Map Style:", ["Standard Map", "Satellite View"])
 
-# 2. Add layers based on the sidebar selection
+# Add layers based on the sidebar selection
 if map_style == "Standard Map":
     folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 else:
@@ -184,7 +184,7 @@ def score_label(score):
     else:
         return "excellent"
 
-# For each location
+# Markers information
 for loc in locations_data:
 
     label = score_label(loc["score"])
@@ -232,9 +232,8 @@ for loc in locations_data:
         icon=folium.Icon(color=color)
     ).add_to(m)
     
-# ------------------------
-# DISPLAY
-# Sleek Horizontal Legend
+# Legend
+
 st_folium(m, width=900, height=500)
 
 st.markdown("""
