@@ -157,39 +157,68 @@ folium.TileLayer(
     subdomains=['mt0', 'mt1', 'mt2', 'mt3']
 ).add_to(m)
 
-# ------------------------
-# MARKERS
-# ------------------------
+# 🎨 Color mapping based on score
+def score_label(score):
+    if score == 0:
+        return "unsurfable"
+    elif score <= 0.2:
+        return "poor"
+    elif score <= 0.4:
+        return "fair"
+    elif score <= 0.6:
+        return "moderate"
+    elif score <= 0.8:
+        return "good"
+    else:
+        return "excellent"
+
+# For each location
 for loc in locations_data:
 
-    # Webcam logic
+    label = score_label(loc["score"])
+    color = score_color(loc["score"])
+
     webcam_html = (
-        f'<a href="{loc["webcam"]}" target="_blank">Live Webcam</a>'
+        f'<a href="{loc["webcam"]}" target="_blank" '
+        'style="display:block;text-align:center;background-color:#3498db;'
+        'color:white;padding:8px;text-decoration:none;border-radius:5px;'
+        'font-weight:bold;font-size:12px;">📺 VIEW LIVE WEBCAM</a>'
         if loc["webcam"]
-        else "No webcam available"
+        else '<div style="text-align:center;font-size:12px;">No webcam available</div>'
     )
 
-    # 📊 TABLE POPUP (scientific + clean)
     popup_html = f"""
-    <table style="width:200px">
-        <tr><th colspan="2">{loc['name']}</th></tr>
-        <tr><td>Surf Score</td><td>{loc['score']:.2f}</td></tr>
-        <tr><td>Wave Height</td><td>{loc['wave']:.2f} m</td></tr>
-        <tr><td>Wind</td><td>{loc['wind']:.1f} m/s</td></tr>
-        <tr><td>Sea Temp</td><td>{loc['sst']:.1f} °C</td></tr>
-        <tr><td>Wetsuit</td><td>{loc['wetsuit']}</td></tr>
-        <tr><td>Webcam</td><td>{webcam_html}</td></tr>
-    </table>
+    <div style="font-family: Helvetica, sans-serif; width: 220px; padding: 5px;">
+        <h4 style="margin:0 0 10px 0; color:#2c3e50; border-bottom:2px solid #3498db;">
+            {loc['name']}
+        </h4>
+
+        <div style="background-color:#f8f9fa; padding:10px; border-radius:8px;
+                    border-left:5px solid {color};">
+
+            <b>Condition:</b> 
+            <span style="color:{color}; text-transform:uppercase;">
+                {label}
+            </span><br>
+
+            <b>Score:</b> {loc['score']:.2f}<br>
+            <b>Wave:</b> {loc['wave']:.2f} m<br>
+            <b>Wind:</b> {loc['wind']:.1f} m/s<br>
+            <b>Sea Temp:</b> {loc['sst']:.1f} °C<br>
+            <b>Wetsuit:</b> {loc['wetsuit']}
+        </div>
+
+        <br>
+        {webcam_html}
+    </div>
     """
 
     folium.Marker(
         location=[loc["lat"], loc["lon"]],
-        popup=folium.Popup(popup_html, max_width=250),
-        icon=folium.Icon(color=score_color(loc["score"]))
+        popup=folium.Popup(popup_html, max_width=260),
+        tooltip=f"{loc['name']} ({label})",
+        icon=folium.Icon(color=color)
     ).add_to(m)
-
-# 🎛 Layer control (ESSENTIAL for grading)
-folium.LayerControl(collapsed=False).add_to(m)
 
 # ------------------------
 # DISPLAY
