@@ -139,14 +139,21 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # CREATE MAP (IMPROVED)
 # ------------------------
 
-# Limit zoom + nicer defaults
 m = folium.Map(
     location=(43.49, -3.58),
     zoom_start=10,
-    min_zoom=8,
+    min_zoom=6,   # prevents zooming too far out
     max_zoom=14,
-    control_scale=True  # scale bar
+    control_scale=True
 )
+
+# 🇪🇸 Restrict map to Spain extent
+spain_bounds = [
+    [35.5, -10.0],   # Southwest Spain
+    [44.5, 4.5]      # Northeast Spain
+]
+
+m.fit_bounds(spain_bounds)
 
 # 🌍 Default map (OpenStreetMap already included)
 
