@@ -1,0 +1,9 @@
+streamlit
+streamlit-folium
+folium
+branca
+pandas
+openmeteo-requests
+requests-cache
+retry-requests
+numpy
