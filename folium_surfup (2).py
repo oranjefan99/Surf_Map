@@ -127,20 +127,20 @@ def score_color(score):
 # Fetch data
 locations_data = get_all_surf_data()
 # --- FETCH DATA BLOCK ---
-    try:
-        response = openmeteo.weather_api(
-            "https://marine-api.open-meteo.com/v1/marine",
-            params=params
-        )[0]
+try:
+    response = openmeteo.weather_api(
+        "https://marine-api.open-meteo.com/v1/marine",
+        params=params
+    )[0]
 
-        response2 = openmeteo.weather_api(
-            "https://api.open-meteo.com/v1/forecast",
-            params=params2
-        )[0]
+    response2 = openmeteo.weather_api(
+        "https://api.open-meteo.com/v1/forecast",
+        params=params2
+    )[0]
 
-    except Exception as e:
-        st.warning(f"API error at {name}: {e}")
-        continue
+except Exception as e:
+    st.warning(f"API error at {name}: {e}")
+    continue
     # --- END FETCH DATA BLOCK ---
     
     idx = 0
