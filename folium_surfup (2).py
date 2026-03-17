@@ -138,20 +138,25 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # ------------------------
 # CREATE MAP (IMPROVED)
 # ------------------------
-m = folium.Map(
-    location=[43.493198, -3.587073],
-    zoom_start=11,
-    min_zoom=8,
-    max_zoom=16,
-    max_bounds=True
-)
+# Define the boundaries 
+map_bounds = [[43.30, -3.95], [43.60, -3.30]]
 
-# Google Satellite Layer
+m = folium.Map(
+    location=[43.46, -3.55],
+    zoom_start=11,
+    min_zoom=10,        # Prevents zooming out too far
+    max_zoom=15,        # Prevents zooming in too deep
+    max_bounds=True,
+    min_lat=map_bounds[0][0],
+    max_lat=map_bounds[1][0],
+    min_lon=map_bounds[0][1],
+    max_lon=map_bounds[1][1]
+)
+# Add Google Satellite Layer
 folium.TileLayer(
     tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
     attr='Google',
     name='Google Satellite',
-    max_zoom=20,
     subdomains=['mt0', 'mt1', 'mt2', 'mt3']
 ).add_to(m)
 
@@ -223,42 +228,44 @@ for loc in locations_data:
 # DISPLAY
 # ------------------------
 st_folium(m, width=900, height=600)
+# Sleek Horizontal Legend
 st.markdown("""
-<div style="font-size:24px; font-weight:700; margin-bottom:12px;">
-    Legend – Surf Scores
-</div>
+<style>
+    .legend-container {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 10px;
+    }
+    .legend-bar {
+        display: flex;
+        height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+    .legend-item { flex: 1; text-align: center; font-size: 11px; font-weight: bold; color: white; line-height: 20px; }
+    .legend-labels { display: flex; justify-content: space-between; font-size: 12px; color: #444; }
+</style>
 
-<div style="display:flex; flex-direction:column; gap:12px; font-size:20px;">
-
-    <div>
-        <span style="font-size:32px; color:black;">●</span>
-        <span style="margin-left:10px;">0 (unsurfable)</span>
+<div class="legend-container">
+    <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">Surf Condition Guide</div>
+    <div class="legend-bar">
+        <div style="background-color: black;" class="legend-item">0</div>
+        <div style="background-color: #8B0000;" class="legend-item">0.2</div>
+        <div style="background-color: red;" class="legend-item">0.4</div>
+        <div style="background-color: orange;" class="legend-item">0.6</div>
+        <div style="background-color: #90EE90;" class="legend-item">0.8</div>
+        <div style="background-color: green;" class="legend-item">1.0</div>
     </div>
-
-    <div>
-        <span style="font-size:32px; color:#8B0000;">●</span>
-        <span style="margin-left:10px;">0–0.2 (very poor)</span>
+    <div class="legend-labels">
+        <span>Unsurfable</span>
+        <span>Very Poor</span>
+        <span>Poor</span>
+        <span>Fair</span>
+        <span>Good</span>
+        <span>Excellent</span>
     </div>
-
-    <div>
-        <span style="font-size:32px; color:red;">●</span>
-        <span style="margin-left:10px;">0.2–0.4 (poor)</span>
-    </div>
-
-    <div>
-        <span style="font-size:32px; color:orange;">●</span>
-        <span style="margin-left:10px;">0.4–0.6 (fair)</span>
-    </div>
-
-    <div>
-        <span style="font-size:32px; color:#90EE90;">●</span>
-        <span style="margin-left:10px;">0.6–0.8 (good)</span>
-    </div>
-
-    <div>
-        <span style="font-size:32px; color:#006400;">●</span>
-        <span style="margin-left:10px;">0.8–1 (excellent)</span>
-    </div>
-
 </div>
 """, unsafe_allow_html=True)
