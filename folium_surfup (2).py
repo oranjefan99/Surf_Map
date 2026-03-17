@@ -153,8 +153,6 @@ spain_bounds = [
     [44.5, 4.5]      # Northeast Spain
 ]
 
-m.fit_bounds(spain_bounds)
-
 # 🌍 Default map (OpenStreetMap already included)
 
 # 🛰 Google Satellite Layer
