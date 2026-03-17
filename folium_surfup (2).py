@@ -142,7 +142,7 @@ else:
     
 # Define the boundaries 
 
-map_bounds = [[43.30, -3.95], [43.60, -3.30]]
+map_bounds = [[43.30, -3.95], [43.60, -2.80]]
 
 m = folium.Map(
     location=map_center,    
