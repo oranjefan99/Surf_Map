@@ -152,6 +152,7 @@ m = folium.Map(
     min_lon=map_bounds[0][1],
     max_lon=map_bounds[1][1]
 )
+tiles=None
 
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 
@@ -267,7 +268,7 @@ st.markdown("""
 </style>
 
 <div class="mini-legend">
-    <div class="legend-title">🌊 Surf Score Legend</div>
+    <div class="legend-title">Surf Score Legend</div>
     <div class="bar-container">
         <div class="bar-segment" style="background-color: black;"></div>
         <div class="bar-segment" style="background-color: #8B0000;"></div>
@@ -278,8 +279,10 @@ st.markdown("""
     </div>
     <div class="label-container">
         <span>Unsurfable</span>
+        <span>Very poor</span>
         <span>Poor</span>
         <span>Fair</span>
+        <span>Good</span>
         <span>Excellent</span>
     </div>
 </div>
