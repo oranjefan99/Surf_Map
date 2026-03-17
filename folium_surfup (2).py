@@ -133,7 +133,7 @@ beach_names = [loc["name"] for loc in locations_data]
 selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
 
 if selected_beach_name == "Overview":
-    map_center = [43.493198, -3.987073]
+    map_center = [43.49633036878374, -3.603513119090905]
     start_zoom = 10
 else:
     selected_loc = next(item for item in locations_data if item["name"] == selected_beach_name)
@@ -142,7 +142,7 @@ else:
     
 # Define the boundaries 
 
-map_bounds = [[43.30, -3.95], [43.60, -2.80]]
+map_bounds = [[43.30, -4.2], [43.60, -2.5]]
 
 m = folium.Map(
     location=map_center,    
@@ -151,7 +151,7 @@ m = folium.Map(
     max_zoom=15,
     max_bounds=True,
     tiles=None,
-    min_lat=43.30, max_lat=43.90, min_lon=-3.95, max_lon=-2.80
+    min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-2.5
 )
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 
