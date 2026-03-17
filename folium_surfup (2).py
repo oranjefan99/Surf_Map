@@ -29,11 +29,9 @@ def get_all_surf_data():
     import datetime
     current_hour_idx = datetime.datetime.now().hour
 
-    # Extract lists for batch processing
     lats = [loc[1] for loc in locations]
     lons = [loc[2] for loc in locations]
 
-    # Batch Params using your specific required variables
     params_marine = {
         "latitude": lats, 
         "longitude": lons,
@@ -50,7 +48,6 @@ def get_all_surf_data():
     }
 
     try:
-        # One request for ALL locations to save quota
         marine_responses = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params_marine)
         weather_responses = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params_weather)
         
@@ -99,8 +96,7 @@ def get_all_surf_data():
         return []
             
     return processed_data
-            
-    return processed_data
+    
 # Wave + wind formulas
 def local_wave_height(wave_height, wave_direction, optimal_dir):
     diff = abs(wave_direction - optimal_dir) % 360
@@ -130,6 +126,7 @@ def surf_score(local_H, wind_speed, wave_height_factor, local_wind_speed_factor,
     if (wind_speed < 49) and (0.6 < local_H < 2.5):
         return (0.5 * wave_height_factor + 0.15 * local_wind_speed_factor + 0.35 * local_wind_dir_factor)
     return 0
+    
 # Wetsuit recommendation based on water temperature
 def wetsuit(sst):
     if sst <= 7.5: return "6/5 mm"
@@ -154,7 +151,6 @@ def score_color(score):
     else:
         return "green"
 
-# Fetch data
 locations_data = get_all_surf_data()
     
 # Create map + beach navigator
@@ -171,10 +167,8 @@ else:
     map_center = [selected_loc["lat"], selected_loc["lon"]]
     start_zoom = 13
     
-# Define the boundaries 
-
+#map
 map_bounds = [[43.30, -4.2], [43.60, -1.5]]
-
 m = folium.Map(
     location=map_center,    
     zoom_start=start_zoom,  
@@ -185,11 +179,10 @@ m = folium.Map(
     min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-1.5
 )
 
-# Add a toggle button in sidebar
+#sidebar
 st.sidebar.subheader("Map Settings")
 map_style = st.sidebar.radio("Map Style:", ["Standard Map", "Satellite View"])
 
-# Add layers based on the sidebar selection
 if map_style == "Standard Map":
     folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 else:
@@ -200,7 +193,7 @@ else:
         subdomains=['mt0', 'mt1', 'mt2', 'mt3']
     ).add_to(m)
     
-# Colour mapping based on score
+#colours
 def score_label(score):
     if score == 0:
         return "unsurfable"
@@ -215,7 +208,7 @@ def score_label(score):
     else:
         return "excellent"
 
-# Markers information
+#markers
 for loc in locations_data:
 
     label = score_label(loc["score"])
@@ -263,7 +256,7 @@ for loc in locations_data:
         icon=folium.Icon(color=color)
     ).add_to(m)
     
-# Legend
+#lgend
 
 st_folium(m, width=900, height=500)
 
