@@ -142,7 +142,7 @@ else:
     
 # Define the boundaries 
 
-map_bounds = [[43.30, -4.2], [43.60, -2.5]]
+map_bounds = [[43.30, -4.2], [43.60, -1.5]]
 
 m = folium.Map(
     location=map_center,    
@@ -151,7 +151,7 @@ m = folium.Map(
     max_zoom=15,
     max_bounds=True,
     tiles=None,
-    min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-2.5
+    min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-1.5
 )
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 
