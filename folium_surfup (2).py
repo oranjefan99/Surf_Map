@@ -143,32 +143,32 @@ except Exception as e:
 continue
     # --- END FETCH DATA BLOCK ---
     
-    idx = 0
+idx = 0
 
-    wave_height = response.Hourly().Variables(0).ValuesAsNumpy()[idx]
-    wave_direction = response.Hourly().Variables(1).ValuesAsNumpy()[idx]
-    sst = response.Hourly().Variables(2).ValuesAsNumpy()[idx]
+wave_height = response.Hourly().Variables(0).ValuesAsNumpy()[idx]
+wave_direction = response.Hourly().Variables(1).ValuesAsNumpy()[idx]
+sst = response.Hourly().Variables(2).ValuesAsNumpy()[idx]
 
-    wind_speed = response2.Hourly().Variables(0).ValuesAsNumpy()[idx]
-    wind_direction = response2.Hourly().Variables(1).ValuesAsNumpy()[idx]
+wind_speed = response2.Hourly().Variables(0).ValuesAsNumpy()[idx]
+wind_direction = response2.Hourly().Variables(1).ValuesAsNumpy()[idx]
 
-    local_H = local_wave_height(wave_height, wave_direction, optimal_dir)
-    ws_factor = local_wind_speed_factor(wind_speed)
-    wd_factor = local_wind_dir_factor(wind_direction, optimal_dir)
-    wave_factor = wave_height_factor(local_H)
-    score = surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor)
+local_H = local_wave_height(wave_height, wave_direction, optimal_dir)
+ws_factor = local_wind_speed_factor(wind_speed)
+wd_factor = local_wind_dir_factor(wind_direction, optimal_dir)
+wave_factor = wave_height_factor(local_H)
+score = surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor)
 
-    locations_data.append({
-        "name": name,
-        "lat": lat,
-        "lon": lon,
-        "score": score,
-        "wave": local_H,
-        "wind": wind_speed,
-        "sst": sst,
-        "wetsuit": wetsuit(sst),
-        "webcam": webcam
-    })
+locations_data.append({
+    "name": name,
+    "lat": lat,
+    "lon": lon,
+    "score": score,
+    "wave": local_H,
+    "wind": wind_speed,
+    "sst": sst,
+    "wetsuit": wetsuit(sst),
+    "webcam": webcam
+})
 
 # Create map + beach navigator
 
