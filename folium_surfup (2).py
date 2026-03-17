@@ -141,14 +141,11 @@ for name, lat, lon, optimal_dir, webcam in locations:
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=14,
+    zoom_start=10,
     min_zoom=12,
     max_zoom=16,
 )
-
-# 🌍 Default map (OpenStreetMap already included)
-
-# 🛰 Google Satellite Layer
+# Google Satellite Layer
 folium.TileLayer(
     tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
     attr='Google',
@@ -162,11 +159,11 @@ def score_label(score):
     if score == 0:
         return "unsurfable"
     elif score <= 0.2:
-        return "poor"
+        return "very poor"
     elif score <= 0.4:
-        return "fair"
+        return "poor"
     elif score <= 0.6:
-        return "moderate"
+        return "fair"
     elif score <= 0.8:
         return "good"
     else:
