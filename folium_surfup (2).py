@@ -198,7 +198,7 @@ for loc in locations_data:
                 {label}
             </span><br>
 
-            <b>Score:</b> {loc['score'] * 10:.1f}<br>
+            <b>Score:</b> {loc['score']:.2f}<br>
             <b>Wave:</b> {loc['wave']:.2f} m<br>
             <b>Wind:</b> {loc['wind']:.1f} m/s<br>
             <b>Sea Temp:</b> {loc['sst']:.1f} °C<br>
