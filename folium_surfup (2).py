@@ -141,8 +141,8 @@ for name, lat, lon, optimal_dir, webcam in locations:
 
 m = folium.Map(
     location=(43.49, -3.58),
-    zoom_start=8,
-    min_zoom=6,   # prevents zooming too far out
+    zoom_start=4,
+    min_zoom=4,   # prevents zooming too far out
     max_zoom=14,
     control_scale=True
 )
