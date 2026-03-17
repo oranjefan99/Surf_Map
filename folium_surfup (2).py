@@ -9,8 +9,8 @@ import numpy as np
 st.set_page_config(layout="wide")
 st.title("Surf’s up… or down? A surf forecast map for novice surfers")
 # API SETUP
-cache_session = requests_cache.CachedSession('.cache', expire_after=60)
-retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+cache_session = requests_cache.CachedSession('.cache', expire_after=3600)
+retry_session = retry(cache_session, retries=20, backoff_factor=0.2)
 openmeteo = openmeteo_requests.Client(session=retry_session)
 
 # Surfspot locations + Webcam links
