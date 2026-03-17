@@ -139,8 +139,8 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # CREATE MAP (IMPROVED)
 # ------------------------
 
-min_lon, max_lon = 4, 48
-min_lat, max_lat = -10, 10
+min_lon, max_lon = -10, 10,
+min_lat, max_lat = 38, 48
 
 m = folium.Map(
     max_bounds=True,
