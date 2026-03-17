@@ -153,18 +153,20 @@ m = folium.Map(
     tiles=None,
     min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-1.5
 )
-folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
+# 1. Add a toggle in the sidebar
+st.sidebar.subheader("Map Settings")
+map_style = st.sidebar.radio("Map Style:", ["Standard Map", "Satellite View"])
 
-# Add Google Satellite Layer
-folium.TileLayer(
-    tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
-    attr='Google',
-    name='Google Satellite',
-    subdomains=['mt0', 'mt1', 'mt2', 'mt3']
-).add_to(m)
-
-folium.LayerControl(collapsed=False).add_to(m)
-
+# 2. Add layers based on the sidebar selection
+if map_style == "Standard Map":
+    folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
+else:
+    folium.TileLayer(
+        tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
+        attr='Google',
+        name='Google Satellite',
+        subdomains=['mt0', 'mt1', 'mt2', 'mt3']
+    ).add_to(m)
 # Colour mapping based on score
 def score_label(score):
     if score == 0:
