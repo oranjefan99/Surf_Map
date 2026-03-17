@@ -144,10 +144,6 @@ m = folium.Map(
     zoom_start=14,
     min_zoom=12,
     max_zoom=16,
-    min_lat=min_lat,
-    max_lat=max_lat,
-    min_lon=min_lon,
-    max_lon=max_lon,
 )
 
 # 🌍 Default map (OpenStreetMap already included)
