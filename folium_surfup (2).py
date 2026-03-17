@@ -150,7 +150,7 @@ m = folium.Map(
     min_lat=map_bounds[0][0],
     max_lat=map_bounds[1][0],
     min_lon=map_bounds[0][1],
-    max_lon=map_bounds[1][1]
+    max_lon=map_bounds[1][1],
     tiles=None
 )
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
