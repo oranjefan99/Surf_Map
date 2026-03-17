@@ -141,8 +141,8 @@ for name, lat, lon, optimal_dir, webcam in locations:
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=10,
-    min_zoom=12,
+    zoom_start=8,
+    min_zoom=6,
     max_zoom=16,
 )
 # Google Satellite Layer
@@ -198,7 +198,7 @@ for loc in locations_data:
                 {label}
             </span><br>
 
-            <b>Score:</b> {loc['score']:.2f}<br>
+            <b>Score:</b> {loc['score'] * 10:.1f}<br>
             <b>Wave:</b> {loc['wave']:.2f} m<br>
             <b>Wind:</b> {loc['wind']:.1f} m/s<br>
             <b>Sea Temp:</b> {loc['sst']:.1f} °C<br>
@@ -223,11 +223,11 @@ for loc in locations_data:
 st_folium(m, width=900, height=600)
 
 st.markdown("""
-**Legend:**
+**Legend surf scores:**
 - Black = 0 (unsurfable)
-- Dark red = 0–0.2
-- Red = 0.2–0.4
-- Orange = 0.4–0.6
-- Light green = 0.6–0.8
-- Dark green = 0.8–1
+- Dark red = 0–0.2 (very poor)
+- Red = 0.2–0.4 (poor)
+- Orange = 0.4–0.6 (fair)
+- Light green = 0.6–0.8 (good)
+- Dark green = 0.8–1 (excellent)
 """)
