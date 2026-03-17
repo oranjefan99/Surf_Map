@@ -144,13 +144,14 @@ else:
 
 map_bounds = [[43.30, -4.2], [43.60, -1.5]]
 
-# Create the map without a fixed center/zoom
 m = folium.Map(
-    min_zoom=8,
+    location=map_center,    
+    zoom_start=start_zoom,  
+    min_zoom=10,
     max_zoom=15,
     max_bounds=True,
     tiles=None,
-    min_lat=43.30, max_lat=43.90, min_lon=-3.95, max_lon=-3.30
+    min_lat=43.30, max_lat=43.90, min_lon=-4.2, max_lon=-1.5
 )
 # 1. Add a toggle in the sidebar
 st.sidebar.subheader("Map Settings")
@@ -229,7 +230,6 @@ for loc in locations_data:
         icon=folium.Icon(color=color)
     ).add_to(m)
     
-m.fit_bounds([[43.41, -3.78], [43.48, -3.42]])
 # ------------------------
 # DISPLAY
 # Sleek Horizontal Legend
