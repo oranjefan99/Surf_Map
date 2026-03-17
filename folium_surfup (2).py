@@ -95,8 +95,7 @@ for name, lat, lon, optimal_dir, webcam in locations:
         "timezone": "Europe/Berlin",
         "forecast_days": 1,}
 
-  try:
-    response = openmeteo.weather_api(
+  try: response = openmeteo.weather_api(
         "https://marine-api.open-meteo.com/v1/marine",
         params=params
     )[0]
