@@ -145,12 +145,7 @@ m = folium.Map(
     max_zoom=16,
     max_bounds=True
 )
-folium.TileLayer(
-    'OpenStreetMap',
-    name='Standard Map',
-    overlay=False,
-    control=True
-).add_to(m)
+
 # Google Satellite Layer
 folium.TileLayer(
     tiles='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
