@@ -153,16 +153,13 @@ else:
 map_bounds = [[43.30, -3.95], [43.60, -3.30]]
 
 m = folium.Map(
-    location=[43.46, -3.55],
-    zoom_start=11,
-    min_zoom=10,        # Prevents zooming out too far
-    max_zoom=15,        # Prevents zooming in too deep
+    location=map_center,    
+    zoom_start=start_zoom,  
+    min_zoom=10,
+    max_zoom=15,
     max_bounds=True,
-    min_lat=map_bounds[0][0],
-    max_lat=map_bounds[1][0],
-    min_lon=map_bounds[0][1],
-    max_lon=map_bounds[1][1],
-    tiles=None
+    tiles=None,
+    min_lat=43.30, max_lat=43.60, min_lon=-3.95, max_lon=-3.30
 )
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 
