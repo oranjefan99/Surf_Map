@@ -138,6 +138,17 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # ------------------------
 # CREATE MAP (IMPROVED)
 # ------------------------
+st.sidebar.title("Beach Navigator")
+beach_names = [loc["name"] for loc in locations_data]
+selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
+n
+if selected_beach_name == "Overview":
+    map_center = [43.493198, -3.587073]
+    start_zoom = 10
+else:
+    selected_loc = next(item for item in locations_data if item["name"] == selected_beach_name)
+    map_center = [selected_loc["lat"], selected_loc["lon"]]
+    start_zoom = 13
 # Define the boundaries 
 map_bounds = [[43.30, -3.95], [43.60, -3.30]]
 
@@ -287,14 +298,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.sidebar.title("Beach Navigator")
-beach_names = [loc["name"] for loc in locations_data]
-selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
-n
-if selected_beach_name == "Overview":
-    map_center = [43.493198, -3.587073]
-    start_zoom = 10
-else:
-    selected_loc = next(item for item in locations_data if item["name"] == selected_beach_name)
-    map_center = [selected_loc["lat"], selected_loc["lon"]]
-    start_zoom = 13
