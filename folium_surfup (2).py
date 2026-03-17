@@ -22,8 +22,56 @@ locations = [
     ("Langre", 43.4760, -3.6910, 358, None),
     ("El Sardinero", 43.4739, -3.7818, 47, "https://www.skylinewebcams.com/en/webcam/espana/cantabria/santander/playa-del-sardinero.html")
 ]
-# Wave + wind formulas
 
+@st.cache_data(ttl=3600)  # Caches the result for 1 hour (3600 seconds)
+def get_all_surf_data():
+    processed_data = []
+    
+    # Get current hour to ensure we always show the current forecast
+    import datetime
+    current_hour_idx = datetime.datetime.now().hour
+
+    for name, lat, lon, optimal_dir, webcam in locations:
+        params = {
+            "latitude": lat, "longitude": lon,
+            "hourly": ["wave_height", "wave_direction", "sea_surface_temperature"],
+            "timezone": "Europe/Berlin", "forecast_days": 1,
+        }
+        params2 = {
+            "latitude": lat, "longitude": lon,
+            "hourly": ["wind_speed_10m", "wind_direction_10m"],
+            "timezone": "Europe/Berlin", "forecast_days": 1,
+        }
+
+        try:
+            res1 = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params)[0]
+            res2 = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params2)[0]
+            
+            # Use current_hour_idx instead of 0 for real-time accuracy
+            h1 = res1.Hourly()
+            h2 = res2.Hourly()
+            
+            wave_h = h1.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wave_d = h1.Variables(1).ValuesAsNumpy()[current_hour_idx]
+            temp_s = h1.Variables(2).ValuesAsNumpy()[current_hour_idx]
+            wind_s = h2.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wind_d = h2.Variables(1).ValuesAsNumpy()[current_hour_idx]
+
+            local_H = local_wave_height(wave_h, wave_d, optimal_dir)
+            score = surf_score(local_H, wind_s, wave_height_factor(local_H), 
+                               local_wind_speed_factor(wind_s), 
+                               local_wind_dir_factor(wind_d, optimal_dir))
+
+            processed_data.append({
+                "name": name, "lat": lat, "lon": lon, "score": score,
+                "wave": local_H, "wind": wind_s, "sst": temp_s,
+                "wetsuit": wetsuit(temp_s), "webcam": webcam
+            })
+        except Exception as e:
+            continue
+            
+    return processed_data
+# Wave + wind formulas
 def local_wave_height(wave_height, wave_direction, optimal_wave_direction):
     diff = abs(wave_direction - optimal_wave_direction) % 360
     delta = min(diff, 360 - diff)
@@ -77,24 +125,7 @@ def score_color(score):
         return "green"
 
 # Fetch data
-locations_data = []
-
-for name, lat, lon, optimal_dir, webcam in locations:
-    params = {
-        "latitude": lat,
-        "longitude": lon,
-        "hourly": ["wave_height", "wave_direction", "sea_surface_temperature"],
-        "timezone": "Europe/Berlin",
-        "forecast_days": 1,
-    }
-
-    params2 = {
-        "latitude": lat,
-        "longitude": lon,
-        "hourly": ["wind_speed_10m", "wind_direction_10m"],
-        "timezone": "Europe/Berlin",
-        "forecast_days": 1,}
-
+locations_data = get_all_surf_data()
 # --- FETCH DATA BLOCK ---
     try:
         response = openmeteo.weather_api(
