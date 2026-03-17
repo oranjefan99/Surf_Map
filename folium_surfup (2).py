@@ -138,15 +138,11 @@ for name, lat, lon, optimal_dir, webcam in locations:
 # ------------------------
 # CREATE MAP (IMPROVED)
 # ------------------------
-
-min_lon, max_lon = -10, 10,
-min_lat, max_lat = 38, 48
-
 m = folium.Map(
     max_bounds=True,
     location=[43.493198, -3.587073],
-    zoom_start=10,
-    min_zoom=8,
+    zoom_start=14,
+    min_zoom=12,
     max_zoom=16,
     min_lat=min_lat,
     max_lat=max_lat,
