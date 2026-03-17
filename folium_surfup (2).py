@@ -71,13 +71,13 @@ def wetsuit(temp):
 # 🎯 NEW COLOR SCALE (your exact specification)
 def score_color(score):
     if score == 0:
-        return "darkred"
+        return "black"
     elif score <= 0.2:
-        return "red"
+        return "darkred"
     elif score <= 0.4:
-        return "orange"
+        return "red"
     elif score <= 0.6:
-        return "beige"   # closest to yellow in folium
+        return "orange"
     elif score <= 0.8:
         return "lightgreen"
     else:
@@ -227,10 +227,10 @@ st_folium(m, width=900, height=600)
 
 st.markdown("""
 **Legend:**
-- Dark red = 0 (unsurfable)
-- Red = 0–0.2
-- Orange = 0.2–0.4
-- Yellow = 0.4–0.6
+- Black = 0 (unsurfable)
+- Dark red = 0–0.2
+- Red = 0.2–0.4
+- Orange = 0.4–0.6
 - Light green = 0.6–0.8
 - Dark green = 0.8–1
 """)
