@@ -51,11 +51,11 @@ def get_all_surf_data():
             h1 = res1.Hourly()
             h2 = res2.Hourly()
             
-            wave_h = h1.Variables(0).ValuesAsNumpy()[current_hour_idx]
-            wave_d = h1.Variables(1).ValuesAsNumpy()[current_hour_idx]
-            temp_s = h1.Variables(2).ValuesAsNumpy()[current_hour_idx]
-            wind_s = h2.Variables(0).ValuesAsNumpy()[current_hour_idx]
-            wind_d = h2.Variables(1).ValuesAsNumpy()[current_hour_idx]
+            wave_height = h1.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wave_direction = h1.Variables(1).ValuesAsNumpy()[current_hour_idx]
+            sst = h1.Variables(2).ValuesAsNumpy()[current_hour_idx]
+            wind_speed = h2.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wind_direction = h2.Variables(1).ValuesAsNumpy()[current_hour_idx]
 
             local_H = local_wave_height(wave_h, wave_d, optimal_dir)
             score = surf_score(local_H, wind_s, wave_height_factor(local_H), 
@@ -126,50 +126,8 @@ def score_color(score):
 
 # Fetch data
 locations_data = get_all_surf_data()
-# --- FETCH DATA BLOCK ---
-try:
-    response = openmeteo.weather_api(
-        "https://marine-api.open-meteo.com/v1/marine",
-        params=params
-    )[0]
 
-    response2 = openmeteo.weather_api(
-        "https://api.open-meteo.com/v1/forecast",
-        params=params2
-    )[0]
-
-except Exception as e:
-    st.warning(f"API error at {name}: {e}")
-    continue
-    # --- END FETCH DATA BLOCK ---
     
-idx = 0
-
-wave_height = response.Hourly().Variables(0).ValuesAsNumpy()[idx]
-wave_direction = response.Hourly().Variables(1).ValuesAsNumpy()[idx]
-sst = response.Hourly().Variables(2).ValuesAsNumpy()[idx]
-
-wind_speed = response2.Hourly().Variables(0).ValuesAsNumpy()[idx]
-wind_direction = response2.Hourly().Variables(1).ValuesAsNumpy()[idx]
-
-local_H = local_wave_height(wave_height, wave_direction, optimal_dir)
-ws_factor = local_wind_speed_factor(wind_speed)
-wd_factor = local_wind_dir_factor(wind_direction, optimal_dir)
-wave_factor = wave_height_factor(local_H)
-score = surf_score(local_H, wind_speed, wave_factor, ws_factor, wd_factor)
-
-locations_data.append({
-    "name": name,
-    "lat": lat,
-    "lon": lon,
-    "score": score,
-    "wave": local_H,
-    "wind": wind_speed,
-    "sst": sst,
-    "wetsuit": wetsuit(sst),
-    "webcam": webcam
-})
-
 # Create map + beach navigator
 
 st.sidebar.title("Beach Navigator")
