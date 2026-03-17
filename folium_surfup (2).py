@@ -141,7 +141,7 @@ for name, lat, lon, optimal_dir, webcam in locations:
 st.sidebar.title("Beach Navigator")
 beach_names = [loc["name"] for loc in locations_data]
 selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
-n
+
 if selected_beach_name == "Overview":
     map_center = [43.493198, -3.587073]
     start_zoom = 10
