@@ -8,17 +8,12 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 st.title("Surf’s up… or down? A surf forecast map for novice surfers")
-
-# ------------------------
 # API SETUP
-# ------------------------
 cache_session = requests_cache.CachedSession('.cache', expire_after=60)
 retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
 openmeteo = openmeteo_requests.Client(session=retry_session)
 
-# ------------------------
-# SURFSPOTS + WEBCAMS
-# ------------------------
+# Surfspot locations + Webcam links
 locations = [
     ("Laredo Beach", 43.4189, -3.4362, 51.9, "https://www.youtube.com/watch?v=xdi4_E5zCKg"),
     ("El Puerto", 43.4152, -3.4203, 353.4, None),
@@ -27,10 +22,8 @@ locations = [
     ("Langre", 43.4760, -3.6910, 358, None),
     ("El Sardinero", 43.4739, -3.7818, 47, "https://www.skylinewebcams.com/en/webcam/espana/cantabria/santander/playa-del-sardinero.html")
 ]
+# Wave + wind formulas
 
-# ------------------------
-# FUNCTIONS
-# ------------------------
 def local_wave_height(wave_height, wave_direction, optimal_wave_direction):
     diff = abs(wave_direction - optimal_wave_direction) % 360
     delta = min(diff, 360 - diff)
@@ -68,7 +61,7 @@ def wetsuit(temp):
     elif temp <= 20.5: return "2/1 mm"
     else: return "Shorty"
 
-# 🎯 NEW COLOR SCALE (your exact specification)
+# Colour scale
 def score_color(score):
     if score == 0:
         return "black"
@@ -83,9 +76,7 @@ def score_color(score):
     else:
         return "green"
 
-# ------------------------
-# FETCH DATA
-# ------------------------
+# Fetch data
 locations_data = []
 
 for name, lat, lon, optimal_dir, webcam in locations:
@@ -135,9 +126,8 @@ for name, lat, lon, optimal_dir, webcam in locations:
         "webcam": webcam
     })
 
-# ------------------------
-# CREATE MAP (IMPROVED)
-# ------------------------
+# Create map + beach navigator
+
 st.sidebar.title("Beach Navigator")
 beach_names = [loc["name"] for loc in locations_data]
 selected_beach_name = st.sidebar.selectbox("Jump to a Beach:", ["Overview"] + beach_names)
@@ -149,7 +139,9 @@ else:
     selected_loc = next(item for item in locations_data if item["name"] == selected_beach_name)
     map_center = [selected_loc["lat"], selected_loc["lon"]]
     start_zoom = 13
+    
 # Define the boundaries 
+
 map_bounds = [[43.30, -3.95], [43.60, -3.30]]
 
 m = folium.Map(
@@ -159,7 +151,7 @@ m = folium.Map(
     max_zoom=15,
     max_bounds=True,
     tiles=None,
-    min_lat=43.30, max_lat=43.90, min_lon=-3.95, max_lon=-3.30
+    min_lat=43.30, max_lat=43.90, min_lon=-3.95, max_lon=-2.80
 )
 folium.TileLayer('openstreetmap', name='Standard Map').add_to(m)
 
@@ -172,7 +164,8 @@ folium.TileLayer(
 ).add_to(m)
 
 folium.LayerControl(collapsed=False).add_to(m)
-# 🎨 Color mapping based on score
+
+# Colour mapping based on score
 def score_label(score):
     if score == 0:
         return "unsurfable"
