@@ -140,7 +140,7 @@ try:
 
 except Exception as e:
     st.warning(f"API error at {name}: {e}")
-    continue
+continue
     # --- END FETCH DATA BLOCK ---
     
     idx = 0
