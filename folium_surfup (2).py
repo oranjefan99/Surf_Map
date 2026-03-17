@@ -68,7 +68,7 @@ def get_all_surf_data():
                 "wetsuit": wetsuit(temp_s), "webcam": webcam
             })
         except Exception as e:
-    continue
+            continue
             
     return processed_data
 # Wave + wind formulas
