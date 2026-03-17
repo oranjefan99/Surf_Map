@@ -95,9 +95,21 @@ for name, lat, lon, optimal_dir, webcam in locations:
         "timezone": "Europe/Berlin",
         "forecast_days": 1,}
 
-    response = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params)[0]
-    response2 = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params2)[0]
+  try:
+    response = openmeteo.weather_api(
+        "https://marine-api.open-meteo.com/v1/marine",
+        params=params
+    )[0]
 
+    response2 = openmeteo.weather_api(
+        "https://api.open-meteo.com/v1/forecast",
+        params=params2
+    )[0]
+
+except Exception as e:
+    st.warning(f"API error at {name}")
+    continue
+    
     idx = 0
 
     wave_height = response.Hourly().Variables(0).ValuesAsNumpy()[idx]
