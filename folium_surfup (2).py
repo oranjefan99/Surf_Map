@@ -145,13 +145,6 @@ m = folium.Map(
     max_zoom=16,
     max_bounds=True
 )
-
-# 🔒 Hard restrict map to Spain (prevents zooming out)
-m.fit_bounds([
-    [35.5, -10.0],   # Southwest Spain
-    [44.5, 4.5]      # Northeast Spain
-])
-
 folium.TileLayer(
     'OpenStreetMap',
     name='Standard Map',
@@ -235,26 +228,42 @@ for loc in locations_data:
 # DISPLAY
 # ------------------------
 st_folium(m, width=900, height=600)
-
-legend_html = """
-<div style="
-background-color:white;
-padding:15px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.2);
-width:300px;
-font-family: Helvetica;
-margin-top:10px;
-">
-<h4 style="margin-top:0;">Surf Score Legend</h4>
-
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:black;margin-right:10px;"></div>0 (unsurfable)</div>
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:darkred;margin-right:10px;"></div>0–0.2 (very poor)</div>
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:red;margin-right:10px;"></div>0.2–0.4 (poor)</div>
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:orange;margin-right:10px;"></div>0.4–0.6 (fair)</div>
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:lightgreen;margin-right:10px;"></div>0.6–0.8 (good)</div>
-<div style="display:flex;align-items:center;"><div style="width:15px;height:15px;background:green;margin-right:10px;"></div>0.8–1 (excellent)</div>
+st.markdown("""
+<div style="font-size:24px; font-weight:700; margin-bottom:12px;">
+    Legend – Surf Scores
 </div>
-"""
 
-st.markdown(legend_html, unsafe_allow_html=True)
+<div style="display:flex; flex-direction:column; gap:12px; font-size:20px;">
+
+    <div>
+        <span style="font-size:32px; color:black;">●</span>
+        <span style="margin-left:10px;">0 (unsurfable)</span>
+    </div>
+
+    <div>
+        <span style="font-size:32px; color:#8B0000;">●</span>
+        <span style="margin-left:10px;">0–0.2 (very poor)</span>
+    </div>
+
+    <div>
+        <span style="font-size:32px; color:red;">●</span>
+        <span style="margin-left:10px;">0.2–0.4 (poor)</span>
+    </div>
+
+    <div>
+        <span style="font-size:32px; color:orange;">●</span>
+        <span style="margin-left:10px;">0.4–0.6 (fair)</span>
+    </div>
+
+    <div>
+        <span style="font-size:32px; color:#90EE90;">●</span>
+        <span style="margin-left:10px;">0.6–0.8 (good)</span>
+    </div>
+
+    <div>
+        <span style="font-size:32px; color:#006400;">●</span>
+        <span style="margin-left:10px;">0.8–1 (excellent)</span>
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
