@@ -68,6 +68,7 @@ def get_all_surf_data():
                 "wetsuit": wetsuit(sst), "webcam": webcam
             })
         except Exception as e:
+            st.sidebar.warning(f"Failed to load {name}: {e}")
             continue
             
     return processed_data
