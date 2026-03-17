@@ -23,53 +23,82 @@ locations = [
     ("El Sardinero", 43.4739, -3.7818, 47, "https://www.skylinewebcams.com/en/webcam/espana/cantabria/santander/playa-del-sardinero.html")
 ]
 
-@st.cache_data(ttl=3600)  # Caches the result for 1 hour (3600 seconds)
+@st.cache_data(ttl=3600)
 def get_all_surf_data():
     processed_data = []
-    
-    # Get current hour to ensure we always show the current forecast
     import datetime
     current_hour_idx = datetime.datetime.now().hour
 
-    for name, lat, lon, optimal_dir, webcam in locations:
-        params = {
-            "latitude": lat, "longitude": lon,
-            "hourly": ["wave_height", "wave_direction", "sea_surface_temperature"],
-            "timezone": "Europe/Berlin", "forecast_days": 1,
-        }
-        params2 = {
-            "latitude": lat, "longitude": lon,
-            "hourly": ["wind_speed_10m", "wind_direction_10m"],
-            "timezone": "Europe/Berlin", "forecast_days": 1,
-        }
+    # Extract lists for batch processing
+    lats = [loc[1] for loc in locations]
+    lons = [loc[2] for loc in locations]
 
-        try:
-            res1 = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params)[0]
-            res2 = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params2)[0]
-            
-            # Use current_hour_idx instead of 0 for real-time accuracy
-            h1 = res1.Hourly()
-            h2 = res2.Hourly()
-            
-            wave_height = h1.Variables(0).ValuesAsNumpy()[current_hour_idx]
-            wave_direction = h1.Variables(1).ValuesAsNumpy()[current_hour_idx]
-            sst = h1.Variables(2).ValuesAsNumpy()[current_hour_idx]
-            wind_speed = h2.Variables(0).ValuesAsNumpy()[current_hour_idx]
-            wind_direction = h2.Variables(1).ValuesAsNumpy()[current_hour_idx]
+    # Batch Params using your specific required variables
+    params_marine = {
+        "latitude": lats, 
+        "longitude": lons,
+        "hourly": ["wave_height", "wave_direction", "sea_surface_temperature"],
+        "timezone": "Europe/Berlin", 
+        "forecast_days": 1,
+    }
+    params_weather = {
+        "latitude": lats, 
+        "longitude": lons,
+        "hourly": ["wind_speed_10m", "wind_direction_10m"],
+        "timezone": "Europe/Berlin", 
+        "forecast_days": 1,
+    }
 
+    try:
+        # One request for ALL locations to save quota
+        marine_responses = openmeteo.weather_api("https://marine-api.open-meteo.com/v1/marine", params=params_marine)
+        weather_responses = openmeteo.weather_api("https://api.open-meteo.com/v1/forecast", params=params_weather)
+        
+        for i, (name, lat, lon, optimal_dir, webcam) in enumerate(locations):
+            # Access the individual response for this beach
+            res_m = marine_responses[i]
+            res_w = weather_responses[i]
+            
+            h_m = res_m.Hourly()
+            h_w = res_w.Hourly()
+            
+            # Using your original variable names
+            wave_height = h_m.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wave_direction = h_m.Variables(1).ValuesAsNumpy()[current_hour_idx]
+            sst = h_m.Variables(2).ValuesAsNumpy()[current_hour_idx]
+            
+            wind_speed = h_w.Variables(0).ValuesAsNumpy()[current_hour_idx]
+            wind_direction = h_w.Variables(1).ValuesAsNumpy()[current_hour_idx]
+
+            # Calculations using your function signatures
             local_H = local_wave_height(wave_height, wave_direction, optimal_dir)
-            score = surf_score(local_H, wind_speed, wave_height_factor(local_H), 
-                               local_wind_speed_factor(wind_speed), 
-                               local_wind_dir_factor(wind_direction, optimal_dir))
+            
+            # Using your naming for factors
+            score = surf_score(
+                local_H, 
+                wind_speed, 
+                wave_height_factor(local_H), 
+                local_wind_speed_factor(wind_speed), 
+                local_wind_dir_factor(wind_direction, optimal_dir)
+            )
 
             processed_data.append({
-                "name": name, "lat": lat, "lon": lon, "score": score,
-                "wave": local_H, "wind": wind_speed, "sst": sst,
-                "wetsuit": wetsuit(sst), "webcam": webcam
+                "name": name, 
+                "lat": lat, 
+                "lon": lon, 
+                "score": score,
+                "wave": local_H, 
+                "wind": wind_speed, 
+                "sst": sst,
+                "wetsuit": wetsuit(sst), 
+                "webcam": webcam
             })
-        except Exception as e:
-            st.sidebar.warning(f"Failed to load {name}: {e}")
-            continue
+            
+    except Exception as e:
+        st.error(f"API Error: {e}")
+        return []
+            
+    return processed_data
             
     return processed_data
 # Wave + wind formulas
